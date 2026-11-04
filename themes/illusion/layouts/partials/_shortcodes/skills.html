@@ -1,0 +1,18 @@
+{{- /* 幻梦 Illusion v1.1.0 - 正式预览版 */ -}}
+{{- /* 技能展示短代码模板：从站点配置文件读取技能列表并渲染为进度条样式 */ -}}
+<div class="skills-shortcode">
+  <h3>{{ i18n "skills_overview" }}</h3>
+  <div class="skills-list">
+    {{ range .Site.Params.skills }}
+    <div class="skill-shortcode-item">
+      <div class="skill-shortcode-header">
+        <span class="skill-shortcode-name">{{ .name }}</span>
+        <span class="skill-shortcode-level">{{ .level }}%</span>
+      </div>
+      <div class="skill-shortcode-bar">
+        <div class="skill-shortcode-progress" style="width: {{ .level }}%"></div>
+      </div>
+    </div>
+    {{ end }}
+  </div>
+</div>

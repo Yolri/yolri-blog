@@ -1,0 +1,65 @@
+{{- /* 幻梦 Illusion v1.1.0 - 正式预览版 */ -}}
+{{- /* 技能展示页面模板：展示技能分类总览、详细技能进度条和技能发展时间线 */ -}}
+{{ define "main" }}
+{{- /* 从主题数据获取技能配置 */ -}}
+{{ $skillsData := hugo.Data.theme.skills }}
+<div class="section-content">
+  <div class="container">
+    {{ partial "_components/page-header.html" (dict "Title" .Title "Description" .Description) }}
+
+    {{- /* 技能分类总览 */ -}}
+    <section class="skills-overview" data-aos="fade-up">
+      <div class="skills-summary card">
+        <h2 class="section-title">{{ $skillsData.overview.title | default (i18n "skills_overview") }}</h2>
+        <p class="section-subtitle">{{ $skillsData.overview.subtitle | default (i18n "skills_overview_subtitle") }}</p>
+        <div class="skills-categories">
+          {{ with $skillsData.overview.categories }}{{ range . }}
+          <div class="category-item" data-aos="zoom-in">
+            <div class="category-icon"><i class="{{ .icon }}"></i></div>
+            <h3>{{ .title }}</h3>
+            <p>{{ .description }}</p>
+            <div class="category-progress"><div class="progress-bar" style="width: {{ .progress }}%"></div></div>
+          </div>
+          {{ end }}{{ end }}
+        </div>
+      </div>
+    </section>
+
+    {{- /* 详细技能列表（含进度条） */ -}}
+    <section class="detailed-skills" data-aos="fade-up">
+      <h2 class="section-title">{{ i18n "skills_detail" }}</h2>
+      <p class="section-subtitle">{{ i18n "skills_detail_subtitle" }}</p>
+      <div class="skills-detailed-grid">
+        {{ range $skillsData.skills }}
+        <div class="skill-detail-item card" data-aos="fade-up">
+          <div class="skill-header">
+            <h3 class="skill-name">{{ .name }}</h3>
+            <span class="skill-level">{{ .level }}%</span>
+          </div>
+          <div class="skill-bar"><div class="skill-progress" data-level="{{ .level }}"></div></div>
+          {{ with .description }}<div class="skill-description">{{ . }}</div>{{ end }}
+          {{ with .projects }}{{ if gt (len .) 0 }}
+          <div class="skill-projects"><h4>{{ i18n "skills_projects" }}</h4><ul>{{ range . }}<li>{{ . }}</li>{{ end }}</ul></div>
+          {{ end }}{{ end }}
+        </div>
+        {{ end }}
+      </div>
+    </section>
+
+    {{- /* 技能发展时间线 */ -}}
+    <section class="skill-development" data-aos="fade-up">
+      <div class="development-timeline card">
+        <h2 class="section-title">{{ i18n "skills_timeline" }}</h2>
+        <div class="timeline">
+          {{ with $skillsData.timeline }}{{ range . }}
+          <div class="timeline-item" data-aos="fade-up">
+            <div class="timeline-date">{{ .year }}</div>
+            <div class="timeline-content"><h3>{{ .title }}</h3><p>{{ .description }}</p></div>
+          </div>
+          {{ end }}{{ end }}
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+{{ end }}

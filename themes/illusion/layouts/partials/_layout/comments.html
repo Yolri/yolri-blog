@@ -1,0 +1,441 @@
+{{- /* 幻梦 Illusion v1.1.0 - 正式预览版 */ -}}
+{{- /* 评论系统模板：支持 Disqus、Utterances、Giscus、Twikoo、Waline、Artalk 六种评论服务，含主题自适应切换 */ -}}
+{{- if .Site.Params.enableComments -}}
+<section class="comments-section" aria-label='{{ i18n "comments_section" }}'>
+  <div class="container">
+    <h2 class="section-title">{{ i18n "comments_title" }}</h2>
+    <div class="comments-container">
+
+      {{- /* 获取配置的评论提供商，默认 Disqus */ -}}
+      {{- $provider := .Site.Params.commentsProvider | default "disqus" -}}
+
+      {{- /* ========== 评论方案 1：Disqus ========== */ -}}
+      {{- if eq $provider "disqus" -}}
+        {{- if .Site.Params.disqusShortname -}}
+          <div id="disqus_thread"></div>
+          <script>
+            (function() {
+              function reloadDisqus() {
+                if (window.DISQUS) {
+                  window.DISQUS.reset({
+                    reload: true,
+                    config: function() {
+                      this.page.url = '{{ .Permalink }}';
+                      this.page.identifier = '{{ .File.UniqueID }}';
+                      this.page.title = '{{ .Title }}';
+                    }
+                  });
+                }
+              }
+              var disqus_config = function() {
+                this.page.url = '{{ .Permalink }}';
+                this.page.identifier = '{{ .File.UniqueID }}';
+                this.page.title = '{{ .Title }}';
+              };
+              var d = document,
+                s = d.createElement('script');
+              s.src = 'https://{{ .Site.Params.disqusShortname }}.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+              document.addEventListener('themeChanged', function() {
+                setTimeout(reloadDisqus, 400);
+              });
+            })();
+          </script>
+          <noscript>{{ i18n "comments_enable_js" }}</noscript>
+        {{- else -}}
+          <div class="comments-warning" role="alert">
+            <p><i class="fas fa-exclamation-triangle"></i> {{ i18n "comments_disqus_warn" }}</p>
+          </div>
+        {{- end -}}
+      {{- end -}}
+
+      {{- /* ========== 评论方案 2：Utterances ========== */ -}}
+      {{- if eq $provider "utterances" -}}
+        {{- if .Site.Params.utterancesRepo -}}
+          <div id="utterances-comments"></div>
+          <script>
+            function getUtterancesTheme() {
+              var theme = document.documentElement.getAttribute('data-theme');
+              if (theme === 'system' || !theme) {
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'github-dark' : 'github-light';
+              }
+              return theme === 'dark' ? 'github-dark' : 'github-light';
+            }
+
+            function loadUtterances() {
+              var container = document.getElementById('utterances-comments');
+              if (!container) return;
+              var oldScript = container.querySelector('script');
+              if (oldScript) oldScript.remove();
+              var script = document.createElement('script');
+              script.src = 'https://utteranc.es/client.js';
+              script.setAttribute('repo', '{{ .Site.Params.utterancesRepo }}');
+              script.setAttribute('issue-term', '{{ .Site.Params.utterancesIssueTerm | default "pathname" }}');
+              script.setAttribute('theme', getUtterancesTheme());
+              script.setAttribute('crossorigin', 'anonymous');
+              script.async = true;
+              container.appendChild(script);
+            }
+
+            function updateUtterancesTheme(isDark) {
+              var iframe = document.querySelector('.utterances-frame');
+              if (iframe) {
+                iframe.contentWindow.postMessage({
+                  type: 'set-theme',
+                  theme: isDark ? 'github-dark' : 'github-light'
+                }, 'https://utteranc.es');
+              } else {
+                loadUtterances();
+              }
+            }
+
+            function onThemeChanged(e) {
+              var theme = document.documentElement.getAttribute('data-theme');
+              if (theme === 'system' || !theme) {
+                var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                updateUtterancesTheme(isDark);
+              } else {
+                updateUtterancesTheme(e.detail.applied === 'dark');
+              }
+            }
+
+            if (document.readyState === 'loading') {
+              document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(loadUtterances, 200);
+              });
+            } else {
+              setTimeout(loadUtterances, 200);
+            }
+            document.addEventListener('themeChanged', onThemeChanged);
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+              var theme = document.documentElement.getAttribute('data-theme');
+              if (theme === 'system' || !theme) {
+                updateUtterancesTheme(this.matches);
+              }
+            });
+          </script>
+        {{- else -}}
+          <div class="comments-warning" role="alert">
+            <p><i class="fas fa-exclamation-triangle"></i> {{ i18n "comments_utterances_warn" }}</p>
+          </div>
+        {{- end -}}
+      {{- end -}}
+
+      {{- /* ========== 评论方案 3：Giscus ========== */ -}}
+      {{- if eq $provider "giscus" -}}
+        {{- if and .Site.Params.giscusRepo .Site.Params.giscusRepoId .Site.Params.giscusCategory .Site.Params.giscusCategoryId -}}
+          <div id="giscus-comments"></div>
+
+          <style>
+            /* 父页面容器透明 */
+            #giscus-comments,
+            .giscus,
+            .giscus-frame,
+            iframe.giscus-frame {
+              background: transparent !important;
+              background-color: transparent !important;
+            }
+          </style>
+
+          <script>
+            function getGiscusTheme() {
+              var theme = document.documentElement.getAttribute('data-theme');
+              var isDark;
+              if (theme === 'system' || !theme) {
+                isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+              } else {
+                isDark = theme === 'dark';
+              }
+              return isDark ? 'noborder_dark' : 'noborder_light';
+            }
+
+            function loadGiscus() {
+              var container = document.getElementById('giscus-comments');
+              if (!container) return;
+
+              var oldScript = container.querySelector('script');
+              if (oldScript) oldScript.remove();
+              var oldIframe = container.querySelector('iframe');
+              if (oldIframe) oldIframe.remove();
+
+              var script = document.createElement('script');
+              script.src = 'https://giscus.app/client.js';
+              script.setAttribute('data-repo', '{{ .Site.Params.giscusRepo }}');
+              script.setAttribute('data-repo-id', '{{ .Site.Params.giscusRepoId }}');
+              script.setAttribute('data-category', '{{ .Site.Params.giscusCategory }}');
+              script.setAttribute('data-category-id', '{{ .Site.Params.giscusCategoryId }}');
+              script.setAttribute('data-mapping', '{{ .Site.Params.giscusMapping | default "pathname" }}');
+              script.setAttribute('data-strict', '{{ .Site.Params.giscusStrict | default "0" }}');
+              script.setAttribute('data-reactions-enabled', '{{ .Site.Params.giscusReactions | default "1" }}');
+              script.setAttribute('data-emit-metadata', '{{ .Site.Params.giscusEmitMetadata | default "0" }}');
+              script.setAttribute('data-input-position', '{{ .Site.Params.giscusInputPosition | default "bottom" }}');
+              script.setAttribute('data-theme', getGiscusTheme());
+              script.setAttribute('data-lang', '{{ .Site.Params.giscusLang | default .Site.Language.Lang | default "zh-CN" }}');
+              script.setAttribute('crossorigin', 'anonymous');
+              script.async = true;
+              container.appendChild(script);
+            }
+
+            function updateGiscusTheme() {
+              setTimeout(loadGiscus, 300);
+            }
+
+            if (document.readyState === 'loading') {
+              document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(loadGiscus, 200);
+              });
+            } else {
+              setTimeout(loadGiscus, 200);
+            }
+
+            document.addEventListener('themeChanged', function() {
+              setTimeout(loadGiscus, 300);
+            });
+
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+              var theme = document.documentElement.getAttribute('data-theme');
+              if (theme === 'system' || !theme) {
+                setTimeout(loadGiscus, 300);
+              }
+            });
+          </script>
+        {{- else -}}
+          <div class="comments-warning" role="alert">
+            <p><i class="fas fa-exclamation-triangle"></i> {{ i18n "comments_giscus_warn" }}</p>
+          </div>
+        {{- end -}}
+      {{- end -}}
+
+      {{- /* ========== 评论方案 4：Twikoo ========== */ -}}
+      {{- if eq $provider "twikoo" -}}
+        {{- if .Site.Params.twikooEnvId -}}
+          <div id="twikoo-comments"></div>
+          <script src="https://cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js" crossorigin="anonymous"></script>
+          <script>
+            var twikooInstance = null;
+
+            function getAppliedTheme() {
+              var theme = document.documentElement.getAttribute('data-theme');
+              if (theme === 'system' || !theme) {
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+              }
+              return theme;
+            }
+
+            function initTwikoo() {
+              if (typeof twikoo === 'undefined') {
+                setTimeout(initTwikoo, 500);
+                return;
+              }
+              twikooInstance = twikoo.init({
+                envId: '{{ .Site.Params.twikooEnvId }}',
+                el: '#twikoo-comments',
+                lang: '{{ .Site.Params.twikooLang | default "zh-CN" }}',
+                {{- with .Site.Params.twikooRegion }}
+                region: '{{ . }}',
+                {{- end }}
+              });
+              setTimeout(updateTwikooTheme, 300);
+            }
+
+            function updateTwikooTheme() {
+              var isDark = getAppliedTheme() === 'dark';
+              var container = document.querySelector('#twikoo-comments .tk-comments');
+              if (container) {
+                container.setAttribute('data-theme', isDark ? 'dark' : 'light');
+              }
+            }
+
+            if (document.readyState === 'loading') {
+              document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(initTwikoo, 100);
+              });
+            } else {
+              setTimeout(initTwikoo, 100);
+            }
+            document.addEventListener('themeChanged', updateTwikooTheme);
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+              var theme = document.documentElement.getAttribute('data-theme');
+              if (theme === 'system' || !theme) {
+                updateTwikooTheme();
+              }
+            });
+          </script>
+        {{- else -}}
+          <div class="comments-warning" role="alert">
+            <p><i class="fas fa-exclamation-triangle"></i> {{ i18n "comments_twikoo_warn" }}</p>
+          </div>
+        {{- end -}}
+      {{- end -}}
+
+      {{- /* ========== 评论方案 5：Waline ========== */ -}}
+      {{- if eq $provider "waline" -}}
+        {{- if .Site.Params.walineServerURL -}}
+          <div id="waline-comments"></div>
+          <link rel="stylesheet" href="https://unpkg.com/@waline/client/dist/waline.css" crossorigin="anonymous" />
+          <link rel="stylesheet" href="https://unpkg.com/@waline/client/dist/waline-meta.css" crossorigin="anonymous" />
+          <script type="module">
+            import { init } from 'https://unpkg.com/@waline/client/dist/waline.js';
+
+            var walineInstance = null;
+            var walineInitialized = false;
+
+            function getWalineDark() {
+              var theme = document.documentElement.getAttribute('data-theme');
+              if (theme === 'system' || !theme) {
+                return 'auto';
+              }
+              return 'html[data-theme="dark"]';
+            }
+
+            function initWaline() {
+              if (walineInitialized) return;
+              walineInstance = init({
+                el: '#waline-comments',
+                serverURL: '{{ .Site.Params.walineServerURL }}',
+                lang: '{{ .Site.Params.walineLang | default "zh-CN" }}',
+                dark: getWalineDark(),
+                meta: {{ .Site.Params.walineMeta | default (slice "nick" "mail" "link") | jsonify | safeJS }},
+                requiredMeta: {{ .Site.Params.walineRequiredMeta | default (slice "nick" "mail") | jsonify | safeJS }},
+                pageSize: {{ .Site.Params.walinePageSize | default 10 }},
+                path: '{{ .Permalink }}',
+              });
+              walineInitialized = true;
+              window.walineInstance = walineInstance;
+            }
+
+            function updateWalineTheme() {
+              var dark = getWalineDark();
+              if (walineInstance && typeof walineInstance.update === 'function') {
+                walineInstance.update({ dark: dark });
+              }
+            }
+
+            if (document.readyState === 'loading') {
+              document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(initWaline, 100);
+              });
+            } else {
+              setTimeout(initWaline, 100);
+            }
+            document.addEventListener('themeChanged', updateWalineTheme);
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+              var theme = document.documentElement.getAttribute('data-theme');
+              if (theme === 'system' || !theme) {
+                updateWalineTheme();
+              }
+            });
+          </script>
+        {{- else -}}
+          <div class="comments-warning" role="alert">
+            <p><i class="fas fa-exclamation-triangle"></i> {{ i18n "comments_waline_warn" }}</p>
+          </div>
+        {{- end -}}
+      {{- end -}}
+
+      {{- /* ========== 评论方案 6：Artalk ========== */ -}}
+      {{- if eq $provider "artalk" -}}
+        {{- if .Site.Params.artalkServer -}}
+          <link rel="stylesheet" href="{{ .Site.Params.artalkServer }}/dist/Artalk.css" crossorigin="anonymous">
+          <div id="ArtalkComments"></div>
+          <script src="{{ .Site.Params.artalkServer }}/dist/Artalk.js" crossorigin="anonymous"></script>
+          <script>
+            var artalkInstance = null;
+            var artalkInitialized = false;
+
+            function getAppliedTheme() {
+              var theme = document.documentElement.getAttribute('data-theme');
+              if (theme === 'system' || !theme) {
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+              }
+              return theme;
+            }
+
+            function initArtalk() {
+              if (artalkInitialized) return;
+              if (typeof Artalk === 'undefined') {
+                setTimeout(initArtalk, 500);
+                return;
+              }
+              var isDark = getAppliedTheme() === 'dark';
+              try {
+                artalkInstance = Artalk.init({
+                  el: '#ArtalkComments',
+                  server: '{{ .Site.Params.artalkServer }}',
+                  site: '{{ .Site.Params.artalkSite }}',
+                  pageKey: '{{ .Permalink }}',
+                  placeholder: '{{ .Site.Params.artalkPlaceholder | default "说点什么吧..." }}',
+                  darkMode: isDark,
+                });
+                artalkInitialized = true;
+                window.artalkInstance = artalkInstance;
+              } catch (err) {
+                console.error('[Artalk] Init failed:', err);
+              }
+            }
+
+            function updateArtalkTheme() {
+              var isDark = getAppliedTheme() === 'dark';
+              if (artalkInstance && typeof artalkInstance.setDarkMode === 'function') {
+                artalkInstance.setDarkMode(isDark);
+              } else if (artalkInstance && typeof artalkInstance.update === 'function') {
+                artalkInstance.update({ darkMode: isDark });
+              } else {
+                artalkInitialized = false;
+                artalkInstance = null;
+                var container = document.querySelector('#ArtalkComments');
+                if (container) container.innerHTML = '';
+                setTimeout(initArtalk, 200);
+              }
+            }
+
+            function safeInit() {
+              requestAnimationFrame(function() {
+                setTimeout(initArtalk, 150);
+              });
+            }
+
+            if (document.readyState === 'complete') {
+              safeInit();
+            } else if (document.readyState === 'loading') {
+              document.addEventListener('DOMContentLoaded', safeInit);
+            } else {
+              safeInit();
+            }
+            document.addEventListener('themeChanged', updateArtalkTheme);
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+              var theme = document.documentElement.getAttribute('data-theme');
+              if (theme === 'system' || !theme) {
+                updateArtalkTheme();
+              }
+            });
+            window.addEventListener('load', function() {
+              if (artalkInitialized) {
+                var isDark = getAppliedTheme() === 'dark';
+                if (artalkInstance && typeof artalkInstance.setDarkMode === 'function') {
+                  artalkInstance.setDarkMode(isDark);
+                }
+              } else {
+                setTimeout(initArtalk, 300);
+              }
+            });
+          </script>
+        {{- else -}}
+          <div class="comments-warning" role="alert">
+            <p><i class="fas fa-exclamation-triangle"></i> {{ i18n "comments_artalk_warn" }}</p>
+          </div>
+        {{- end -}}
+      {{- end -}}
+
+      {{- /* ========== 未配置评论或评论已禁用 ========== */ -}}
+      {{- if and (ne $provider "disqus") (ne $provider "utterances") (ne $provider "giscus") (ne $provider "twikoo") (ne $provider "waline") (ne $provider "artalk") }}
+        <div class="comments-disabled" role="status">
+          <p><i class="fas fa-comment-slash"></i> {{ i18n "comments_disabled" }}</p>
+        </div>
+      {{- end -}}
+
+    </div>
+  </div>
+</section>
+{{- end -}}

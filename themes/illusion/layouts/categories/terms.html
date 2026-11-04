@@ -1,0 +1,44 @@
+{{- /* 幻梦 Illusion v1.1.0 - 正式预览版 */ -}}
+{{- /* 分类总览页模板：展示所有分类及其文章数量，支持前端分页和降序排列 */ -}}
+{{ define "main" }}
+<div class="section-content" role="main">
+  {{- /* 页面头部：分类总览标题与统计信息 */ -}}
+  {{ partial "_components/page-header.html" (dict
+    "Title" (i18n "categories_header_title")
+    "Icon" "fas fa-folder"
+    "Meta" (i18n "categories_count" (dict "Count" (len .Data.Terms.Alphabetical)))
+    "MetaIcon" "fas fa-folder-open"
+  ) }}
+
+  <div class="container">
+    {{- /* 判断是否有分类项 */ -}}
+    {{ if .Data.Terms }}
+      {{- /* 每页显示数量，从主题数据或默认值获取 */ -}}
+      {{ $perPage := hugo.Data.theme.tags.page.perPage | default 25 }}
+      {{- /* 按文章数量降序排列 */ -}}
+      {{ $sortedTerms := sort .Data.Terms.Alphabetical "Count" "desc" }}
+      {{ $totalTerms := len $sortedTerms }}
+
+      <div class="tags-grid" data-aos="fade-up" id="tags-grid" data-per-page="{{ $perPage }}" data-total="{{ $totalTerms }}">
+        {{ range $sortedTerms }}
+        <div class="tags-card-wrapper">
+          <a href="{{ .Page.RelPermalink }}" class="tags-card">
+            <span class="tags-card-name">{{ .Page.Title }}</span>
+            <span class="tags-card-count">{{ i18n "categories_article_count" (dict "Count" .Count) }}</span>
+          </a>
+        </div>
+        {{ end }}
+      </div>
+
+      {{- /* 前端分页导航（默认隐藏，JS 控制显示） */ -}}
+      <nav class="pagination" id="tags-pagination" aria-label="{{ i18n "page_nav" }}" style="display:none;">
+        <a href="#" class="page-link prev" id="page-prev"><i class="fas fa-chevron-left"></i>{{ i18n "page_prev" }}</a>
+        <div class="page-numbers" id="page-numbers"></div>
+        <a href="#" class="page-link next" id="page-next">{{ i18n "page_next" }}<i class="fas fa-chevron-right"></i></a>
+      </nav>
+    {{ else }}
+      <div class="no-terms-message" data-aos="fade-up"><p>{{ i18n "taxonomy_empty" }}</p></div>
+    {{ end }}
+  </div>
+</div>
+{{ end }}
