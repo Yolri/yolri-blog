@@ -1,0 +1,4 @@
+# 统一换行符，避免 Windows 下把 build.sh 转成 CRLF 导致 Vercel 上执行失败
+* text=auto
+build.sh text eol=lf
+*.sh text eol=lf
