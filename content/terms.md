@@ -1,4 +1,4 @@
----
+﻿---
 title: "使用条款"
 description: "幻梦主题使用条款"
 layout: "legal"
@@ -45,5 +45,5 @@ layout: "legal"
 
 如果您对这些条款有任何疑问，请通过以下方式联系我们：
 
-- **邮箱**: 122343311+Yolri@users.noreply.github.com
-- **网站**: [yolri-blog.vercel.app](https://yolri-blog.vercel.app)
+- **邮箱**: 1217426214@qq.com
+- **网站**: [yolri-blog](https://yolri-blog.vercel.app)

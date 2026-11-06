@@ -149,14 +149,14 @@ about:
       - type: "email"                        # 联系方式类型标识
         icon: "fas fa-envelope"              # 显示图标
         label: "邮箱"                        # 显示标签
-        value: "122343311+Yolri@users.noreply.github.com"  # 显示的值（如邮箱地址）
-        link: "mailto:122343311+Yolri@users.noreply.github.com"  # 点击跳转链接（mailto: 表示邮件）
+        value: "1217426214@qq.com"              # 显示的值（如邮箱地址）
+        link: "mailto:1217426214@qq.com"        # 点击跳转链接（mailto: 表示邮件）
 
       - type: "github"
         icon: "fab fa-github"
         label: "GitHub"
         value: "Yolri"                 # GitHub 用户名
-        link: "https://github.com/Yolri"
+        link: "https://yolri-blog.vercel.app"
 
       - type: "website"
         icon: "fas fa-globe"
@@ -234,7 +234,7 @@ social:
       show: true                             # 是否启用并显示该社交图标：true=显示，false=隐藏
 
     - platform: "email"
-      url: "mailto:122343311+Yolri@users.noreply.github.com"
+      url: "mailto:1217426214@qq.com"
       icon: "fas fa-envelope"
       label: "邮箱"
       show: true
@@ -303,7 +303,7 @@ skills:
   skills:
 
     - name: "JavaScript"                     # 技能名称
-      level: 90                              # 掌握程度：0-100，数字越大越熟练
+      level: 0                              # 掌握程度：0-100，数字越大越熟练
       description: "掌握ES6+特性、异步编程、模块化开发，熟悉Vue.js和React框架。"  # 技能描述段落
       projects:                              # 与该技能相关的项目列表，可为空数组 []
         - "个人博客系统"
@@ -311,17 +311,17 @@ skills:
         - "在线编辑器"
 
     - name: "HTML5"
-      level: 90
+      level: 0
       description: "精通语义化标签、Canvas绘图、Web Storage等HTML5新特性。"
       projects: []
 
     - name: "CSS3"
-      level: 90
+      level: 0
       description: "熟练使用Flexbox、Grid布局，掌握CSS动画和响应式设计。"
       projects: []
 
     - name: "Python"
-      level: 90
+      level: 0
       description: "熟悉Django、Flask框架，掌握数据分析和机器学习基础。"
       projects:
         - "自动化脚本工具"
@@ -329,7 +329,7 @@ skills:
         - "数据分析报告"
 
     - name: "Flutter"
-      level: 75
+      level: 0
       description: "掌握Dart语言，熟悉Widget系统，能够开发跨平台应用。"
       projects:
         - "跨平台电商应用"
@@ -337,7 +337,7 @@ skills:
         - "工具类应用"
 
     - name: "Rust"
-      level: 55
+      level: 0
       description: "了解Rust语言特性，掌握基础语法和内存安全机制。"
       projects: []
 
@@ -408,9 +408,9 @@ friends:
       - "已添加本站链接"
 
     siteInfo:                                # 本站信息，方便申请者填写
-      name: "鸢离Yolri"                     # 本站名称
-      url: "https://yolri-blog.vercel.app"  # 本站网址
-      description: "鸢离Yolri的个人博客 - 记录技术、生活与思考"  # 本站描述
+      name: "爱则心痛 (azxt)"               # 本站名称
+      url: "https://azxt.org"               # 本站网址
+      description: "爱则心痛的个人博客 - 分享技术、生活和思考"  # 本站描述
 
     contactTitle: "联系方式"                  # 联系方式区块标题
     contactDescription: "如果你符合条件并希望交换链接，请通过以下方式联系："  # 联系方式引导语
@@ -419,11 +419,11 @@ friends:
 
       - icon: "fas fa-envelope"              # 联系方式图标
         label: "发送邮件"                    # 联系方式标签文字
-        link: "mailto:122343311+Yolri@users.noreply.github.com"  # 链接地址
+        link: "mailto:1217426214@qq.com"        # 链接地址
 
       - icon: "fab fa-github"
         label: "GitHub Issues"
-        link: "https://github.com/Yolri/yolri-blog/issues"
+        link: "https://github.com/aizexintong/illusion/issues"
 
 
 # ============================================================================
