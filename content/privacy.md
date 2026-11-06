@@ -1,4 +1,4 @@
-﻿---
+---
 title: "隐私政策"
 description: "幻梦主题隐私政策"
 layout: "legal"
@@ -102,8 +102,8 @@ layout: "legal"
 
 如果您对本隐私政策有任何疑问，请通过以下方式联系我们：
 
-- **邮箱**: admin@azxt.org
-- **网站**: [azxt.org](https://azxt.org)
+- **邮箱**: 122343311+Yolri@users.noreply.github.com
+- **网站**: [yolri-blog.vercel.app](https://yolri-blog.vercel.app)
 
 ---
 

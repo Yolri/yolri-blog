@@ -15,11 +15,11 @@
 # 定义网站的标题、描述、作者、关键词等元信息，用于 HTML <head> 和 SEO
 # ============================================================================
 sitetitle:
-  other: "爱则心痛 · azxt"
+  other: "鸢离Yolri · 博客"
 sitedescription:
-  other: "爱则心痛的个人博客"
+  other: "鸢离Yolri的个人博客"
 siteauthor:
-  other: "爱则心痛"
+  other: "鸢离Yolri"
 sitekeywords:
   other: "技术博客,编程,开发,JavaScript,Python,Flutter,Rust"
 
@@ -613,7 +613,7 @@ a11y_background_image:
 # 页面顶部 Header 区域的副标题文字
 # ============================================================================
 header_subtitle:
-  other: "爱则心痛 · azxt"
+  other: "鸢离Yolri · 博客"
 
 # ============================================================================
 # 推荐阅读文案

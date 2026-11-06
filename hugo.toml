@@ -16,10 +16,10 @@
 # defaultContentLanguage: 默认内容语言代码。
 # defaultContentLanguageInSubdir: 是否将默认语言的内容放在子目录中，false 表示根目录即为默认语言。
 # enableGitInfo: 开启后可在页面底部显示基于 Git 提交记录的最后更新时间。
-baseURL = 'https://azxt.org/'
+baseURL = 'https://yolri-blog.vercel.app/'
 locale = 'zh-CN'
 languageName = '中文'
-title = '爱则心痛(演示) | azxt'
+title = '鸢离Yolri的博客'
 theme = 'illusion'
 defaultContentLanguage = 'zh'
 defaultContentLanguageInSubdir = false
@@ -37,12 +37,12 @@ enableGitInfo = true
   # github: GitHub 用户名，用于社交链接和 GitHub 相关功能。
   # domain: 网站主域名，用于生成 Open Graph 等社交标签。
   # siteTime: 网站创建时间，格式为 ISO 8601 时间格式（含时区偏移），如 "2026-04-01T00:00:00+08:00"。
-  author = "爱则心痛(演示)"
-  description = "爱则心痛(演示)的个人博客 - 分享技术、生活和思考"
-  email = "admin@azxt.org"
-  github = "aizexintong"
-  domain = "azxt.org"
-  siteTime = "2026-04-01T00:00:00+08:00"
+  author = "鸢离Yolri"
+  description = "鸢离Yolri的个人博客 - 记录技术、生活与思考"
+  email = "122343311+Yolri@users.noreply.github.com"
+  github = "Yolri"
+  domain = "yolri-blog.vercel.app"
+  siteTime = "2026-11-06T00:00:00+08:00"
 
   # ----- 功能开关 -----
   # 控制站点的各项前端功能，设为 true 启用，false 禁用。
@@ -95,7 +95,7 @@ enableGitInfo = true
 
   # ----- Utterances 评论系统 -----
   # Utterances 是基于 GitHub Issues 的轻量评论系统，评论数据存储在指定仓库的 Issues 中。
-  # utterancesRepo: GitHub 仓库标识，格式: owner/repo（如 "aizexintong/blog-comments"）。
+  # utterancesRepo: GitHub 仓库标识，格式: owner/repo（如 "Yolri/blog-comments"）。
   # utterancesIssueTerm: 评论与页面的映射方式，可选值: pathname | url | title | og:title。
   utterancesRepo = ""
   utterancesIssueTerm = "pathname"
